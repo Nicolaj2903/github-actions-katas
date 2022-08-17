@@ -1,8 +1,14 @@
 name: Java CI # Workflow name
-on: push      # Trigger: on push
+on: 
+  push:      # Trigger: on push
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 env:
   docker_username: ${{ secrets.DOCKER_USERNAME }}
-  docekr_password: ${{ secrets.DOCKER_PASSWORD}}
+  docker_password: ${{ secrets.DOCKER_PASSWORD}}
   GIT_COMMIT: ${{ github.sha }}
 jobs:         # List of jobs
   Clone-down: # Job-01
