@@ -55,4 +55,28 @@ jobs:         # List of jobs
       run: chmod +x ci/build-docker.sh && ci/build-docker.sh
     - name: push docker
       run: chmod +x ci/push-docker.sh && ci/push-docker.sh
-    
+  
+  Component-test: # Job-04
+    runs-on: ubuntu-latest
+    needs: [Docker-image]
+    steps:
+    - name: Component test
+      uses: actions/download-artifact@v1
+      with:
+        name: code
+        path: .
+    - name: Execute test
+      uses: chmod +x ci/component-test.sh && ci/component-test.sh
+  
+
+  Performance-test: # Job-05
+    runs-on: ubuntu-latest
+    needs: [Docker-image]
+    steps:
+    - name: Performance test
+      uses: actions/download-artifact@v1
+      with:
+        name: code
+        path: .
+    - name: Execute test
+      uses: chmod +x ci/performance-test.sh && ci/performance-test.sh
