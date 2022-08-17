@@ -1,0 +1,87 @@
+name: Workflow 02 # Workflow name
+on:
+  push:
+    branches:
+      - "dev/**"      # Trigger: on push
+env:
+  docker_username: ${{ secrets.DOCKER_USERNAME }}
+  docekr_password: ${{ secrets.DOCKER_PASSWORD}}
+  GIT_COMMIT: ${{ github.sha }}
+jobs:         # List of jobs
+  Clone-down: # Job-01
+    name: Clown down repo
+    runs-on: ubuntu-latest
+    container: gradle:6-jdk11
+    steps:    # What the job should do
+    - uses: actions/checkout@v2
+    - name: Upload Repo
+      uses: actions/upload-artifact@v2
+      with:
+        name: code
+        path: . 
+        
+  Build:      # Job-02
+    runs-on: ubuntu-latest
+    needs: Clone-down
+    container: gradle:6-jdk11
+    steps:
+    - name: Download code
+      uses: actions/download-artifact@v2
+      with:
+        name: code
+        path: .
+    - name: Build with Gradle
+      run: chmod +x ci/build-app.sh && ci/build-app.sh
+    - name: Test with Gradle
+      run: chmod +x ci/unit-test-app.sh && ci/unit-test-app.sh
+    - name: Upload Repo
+      uses: actions/upload-artifact@v2
+      with:
+        name: code
+        path: .
+    - name: Upload Jar
+      uses: actions/upload-artifact@v2
+      with:
+        name: build
+        path: app/build/libs/app-0.1-all.jar
+
+  Docker-image: # Job-03
+    runs-on: ubuntu-latest
+    needs: [Build]
+    steps:
+    - name: Download code
+      uses: actions/download-artifact@v1
+      with:
+        name: code
+        path: .
+    - name: build docker
+      run: chmod +x ci/build-docker.sh && ci/build-docker.sh
+    # - name: push docker
+    #   run: chmod +x ci/push-docker.sh && ci/push-docker.sh
+  
+  # Component-test: # Job-04
+  #   runs-on: ubuntu-latest
+  #   needs: [Docker-image]
+  #   steps:
+  #   - name: Component test
+  #     uses: actions/download-artifact@v1
+  #     with:
+  #       name: code
+  #       path: .
+  #   - name: Execute component test
+  #     run: chmod +x ci/component-test.sh && ci/component-test.sh
+  
+
+  Performance-test: # Job-05
+    runs-on: ubuntu-latest
+    needs: [Docker-image]
+    steps:
+    - name: Performance test
+      uses: actions/download-artifact@v1
+      with:
+        name: code
+        path: .
+    - name: Execute performance test
+      run: chmod +x ci/performance-test.sh && ci/performance-test.sh  
+
+# Testing dev branch
