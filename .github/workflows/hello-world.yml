@@ -15,7 +15,7 @@ jobs:         # List of jobs
       uses: actions/upload-artifact@v2
       with:
         name: code
-        path: .
+        path: . 
         
   Build:      # Job-02
     runs-on: ubuntu-latest
