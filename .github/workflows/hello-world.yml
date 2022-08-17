@@ -65,8 +65,8 @@ jobs:         # List of jobs
       with:
         name: code
         path: .
-    - name: Execute test
-      uses: chmod +x ci/component-test.sh && ci/component-test.sh
+    - name: Execute component test
+      run: chmod +x ci/component-test.sh && ci/component-test.sh
   
 
   Performance-test: # Job-05
@@ -78,5 +78,5 @@ jobs:         # List of jobs
       with:
         name: code
         path: .
-    - name: Execute test
+    - name: Execute performance test
       uses: chmod +x ci/performance-test.sh && ci/performance-test.sh
