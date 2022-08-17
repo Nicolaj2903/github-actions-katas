@@ -36,8 +36,11 @@ jobs:         # List of jobs
       with:
         name: code
         path: .
-    - name: Upload compiled code
+    - name: Uplad Jar
       uses: actions/upload-artifact@v2
+      with:
+        name: build
+        path: app/build/libs/app-0.1-all.jar
 
   Docker-image: # Job-03
     runs-on: ubuntu-latest
