@@ -36,7 +36,7 @@ jobs:         # List of jobs
       with:
         name: code
         path: .
-    - name: Uplad Jar
+    - name: Upload Jar
       uses: actions/upload-artifact@v2
       with:
         name: build
